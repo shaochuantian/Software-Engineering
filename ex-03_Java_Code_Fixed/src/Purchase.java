@@ -48,7 +48,6 @@ public class Purchase {
         if (transaction != null) {
             System.out.println("Payment: " + transaction.getPaymentDetails());
         }
-        System.out.println("===========================
-");
+        System.out.println("===========================");
     }
 }
