@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fenix's BookStore - 原型预览 (Axure RP Export)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif; }
+  body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: #f0f2f5; }
+  
+  /* Axure Top Preview Bar */
+  .axure-topbar { height: 38px; background: #2c2f33; color: #ccc; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-size: 12px; border-bottom: 1px solid #1a1c1e; user-select: none; }
+  .axure-topbar .left { display: flex; align-items: center; gap: 15px; }
+  .axure-topbar .logo { font-weight: bold; color: #fff; background: #0095d9; padding: 2px 6px; border-radius: 3px; font-size: 11px; }
+  .axure-topbar .toggle-sidebar { cursor: pointer; padding: 4px 8px; background: #3e4247; border-radius: 3px; color: #fff; }
+  .axure-topbar .toggle-sidebar:hover { background: #4f545c; }
+  .axure-topbar .right { display: flex; gap: 12px; color: #999; }
+
+  /* Main Container */
+  .axure-body { display: flex; flex: 1; overflow: hidden; }
+
+  /* Axure Left Sitemap Sidebar */
+  .axure-sidebar { width: 250px; background: #f8f9fa; border-right: 1px solid #d1d5db; display: flex; flex-direction: column; user-select: none; transition: width 0.2s; }
+  .axure-sidebar.collapsed { width: 0; overflow: hidden; border-right: none; }
+  .sidebar-header { padding: 10px 14px; font-weight: bold; font-size: 13px; color: #374151; border-bottom: 1px solid #e5e7eb; background: #eff1f3; display: flex; justify-content: space-between; }
+  .sitemap-list { list-style: none; padding: 8px 0; overflow-y: auto; flex: 1; }
+  .sitemap-item { padding: 8px 16px; font-size: 13px; color: #4b5563; cursor: pointer; display: flex; align-items: center; gap: 8px; border-left: 3px solid transparent; }
+  .sitemap-item:hover { background: #e5e7eb; color: #111827; }
+  .sitemap-item.active { background: #e0f2fe; color: #0284c7; font-weight: bold; border-left-color: #0284c7; }
+  .sitemap-icon { font-size: 14px; opacity: 0.8; }
+
+  /* Prototype Canvas Area */
+  .prototype-viewport { flex: 1; overflow-y: auto; background: #e5e7eb; padding: 24px; display: flex; justify-content: center; align-items: flex-start; }
+  .page-frame { width: 1100px; min-height: 720px; background: #ffffff; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; display: none; flex-direction: column; }
+  .page-frame.active { display: flex; }
+
+  /* Common Prototype App Header */
+  .app-nav { height: 60px; background: #1e293b; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; }
+  .app-brand { font-size: 20px; font-weight: bold; color: #38bdf8; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+  .app-links { display: flex; gap: 20px; font-size: 14px; align-items: center; }
+  .app-links a { color: #cbd5e1; text-decoration: none; cursor: pointer; padding: 6px 10px; border-radius: 4px; transition: 0.15s; }
+  .app-links a:hover, .app-links a.active-nav { color: #fff; background: #334155; }
+  .badge { background: #ef4444; color: #fff; font-size: 11px; padding: 2px 6px; border-radius: 10px; margin-left: 4px; }
+
+  /* Page Content Common */
+  .page-content { padding: 32px; flex: 1; display: flex; flex-direction: column; }
+  .section-title { font-size: 20px; font-weight: bold; color: #1e293b; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+
+  /* Buttons & Inputs */
+  .btn { padding: 8px 16px; border-radius: 4px; border: 1px solid transparent; font-size: 14px; cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+  .btn-primary { background: #0284c7; color: #fff; }
+  .btn-primary:hover { background: #0369a1; }
+  .btn-success { background: #16a34a; color: #fff; }
+  .btn-success:hover { background: #15803d; }
+  .btn-danger { background: #dc2626; color: #fff; }
+  .btn-danger:hover { background: #b91c1c; }
+  .btn-outline { background: #fff; border-color: #cbd5e1; color: #334155; }
+  .btn-outline:hover { background: #f8fafc; border-color: #94a3b8; }
+  .input-box { padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; outline: none; width: 100%; }
+  .input-box:focus { border-color: #0284c7; box-shadow: 0 0 0 2px rgba(2,132,199,0.15); }
+
+  /* Page 1: Browse Books */
+  .hero-banner { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #fff; padding: 28px 36px; border-radius: 8px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+  .hero-banner h2 { font-size: 24px; margin-bottom: 8px; color: #38bdf8; }
+  .hero-banner p { color: #cbd5e1; font-size: 14px; max-width: 550px; line-height: 1.5; }
+  .search-bar { display: flex; gap: 10px; margin-bottom: 24px; }
+  .book-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .book-card { border: 1px solid #e2e8f0; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; transition: 0.2s; background: #fff; }
+  .book-card:hover { box-shadow: 0 6px 16px rgba(0,0,0,0.06); transform: translateY(-2px); }
+  .book-cover { height: 150px; background: #f1f5f9; border-radius: 4px; margin-bottom: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #475569; font-weight: bold; border: 1px dashed #cbd5e1; text-align: center; padding: 10px; }
+  .book-cover span { font-size: 12px; color: #94a3b8; font-weight: normal; margin-top: 4px; }
+  .book-title { font-size: 16px; font-weight: bold; color: #0f172a; margin-bottom: 4px; }
+  .book-author { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+  .book-bottom { margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid #f1f5f9; }
+  .book-price { font-size: 18px; font-weight: bold; color: #dc2626; }
+
+  /* Auth Forms (Login / Register) */
+  .auth-card { width: 420px; margin: 40px auto; border: 1px solid #e2e8f0; border-radius: 8px; padding: 32px; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-size: 13px; font-weight: bold; color: #334155; margin-bottom: 6px; }
+
+  /* Tables (Cart, Order, Stock) */
+  .proto-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 14px; }
+  .proto-table th { background: #f8fafc; color: #475569; text-align: left; padding: 12px 16px; border-bottom: 2px solid #e2e8f0; font-weight: bold; }
+  .proto-table td { padding: 14px 16px; border-bottom: 1px solid #e2e8f0; color: #1e293b; vertical-align: middle; }
+  .qty-control { display: inline-flex; align-items: center; border: 1px solid #cbd5e1; border-radius: 4px; overflow: hidden; }
+  .qty-btn { background: #f1f5f9; border: none; padding: 4px 10px; cursor: pointer; font-weight: bold; }
+  .qty-btn:hover { background: #e2e8f0; }
+  .qty-val { padding: 4px 12px; font-size: 13px; }
+
+  /* Summary Box */
+  .summary-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+  .total-price { font-size: 24px; font-weight: bold; color: #dc2626; }
+
+  /* Payment Gateway Box */
+  .pay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+  .pay-method { border: 2px solid #e2e8f0; border-radius: 6px; padding: 16px; text-align: center; cursor: pointer; font-weight: bold; color: #334155; }
+  .pay-method.selected { border-color: #0284c7; background: #f0f9ff; color: #0284c7; }
+  .qr-placeholder { width: 180px; height: 180px; margin: 20px auto; border: 2px dashed #94a3b8; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; color: #475569; font-size: 13px; }
+
+  /* Toast Notification */
+  #toast { position: fixed; bottom: 24px; right: 24px; background: #1e293b; color: #fff; padding: 12px 20px; border-radius: 6px; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; z-index: 9999; border-left: 4px solid #38bdf8; }
+</style>
+</head>
+<body>
+
+<!-- Top Axure Simulation Bar -->
+<div class="axure-topbar">
+  <div class="left">
+    <span class="logo">Axure RP 8</span>
+    <span class="toggle-sidebar" onclick="toggleSidebar()">☰ 页面导航 (Sitemap)</span>
+    <span id="current-page-label" style="color:#fff; font-weight:bold;">当前页面：(1) 系统主界面（商品浏览页）</span>
+  </div>
+  <div class="right">
+    <span>项目：Fenix's BookStore 书店系统原型</span>
+    <span>|</span>
+    <span>交互模式：高保真演示</span>
+  </div>
+</div>
+
+<div class="axure-body">
+  <!-- Left Sitemap Sidebar -->
+  <div class="axure-sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span>📁 Fenix's BookStore</span>
+      <span style="color:#6b7280; font-weight:normal;">9 页</span>
+    </div>
+    <ul class="sitemap-list" id="sitemap">
+      <li class="sitemap-item active" onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')"><span class="sitemap-icon">📄</span>(1) 系统主界面（商品浏览页）</li>
+      <li class="sitemap-item" onclick="switchPage(2, '(2) 用户登录')"><span class="sitemap-icon">📄</span>(2) 用户登录</li>
+      <li class="sitemap-item" onclick="switchPage(3, '(3) 用户注册')"><span class="sitemap-icon">📄</span>(3) 用户注册</li>
+      <li class="sitemap-item" onclick="switchPage(4, '(4) 购物车')"><span class="sitemap-icon">📄</span>(4) 购物车</li>
+      <li class="sitemap-item" onclick="switchPage(5, '(5) 下单')"><span class="sitemap-icon">📄</span>(5) 下单</li>
+      <li class="sitemap-item" onclick="switchPage(6, '(6) 结算')"><span class="sitemap-icon">📄</span>(6) 结算</li>
+      <li class="sitemap-item" onclick="switchPage(7, '(7) 支付')"><span class="sitemap-icon">📄</span>(7) 支付</li>
+      <li class="sitemap-item" onclick="switchPage(8, '(8) 库存')"><span class="sitemap-icon">📄</span>(8) 库存（后台管理）</li>
+      <li class="sitemap-item" onclick="switchPage(9, '(9) 添加商品')"><span class="sitemap-icon">📄</span>(9) 添加商品（后台管理）</li>
+    </ul>
+  </div>
+
+  <!-- Main Viewport -->
+  <div class="prototype-viewport">
+
+    <!-- PAGE 1: 系统主界面（商品浏览页） -->
+    <div class="page-frame active" id="page-1">
+      <div class="app-nav">
+        <div class="app-brand" onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')">📚 Fenix's BookStore</div>
+        <div class="app-links">
+          <a class="active-nav" onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')">首页浏览</a>
+          <a onclick="switchPage(4, '(4) 购物车')">🛒 购物车 <span class="badge" id="nav-cart-count">2</span></a>
+          <a onclick="switchPage(8, '(8) 库存')">⚙️ 后台库存管理</a>
+          <a onclick="switchPage(2, '(2) 用户登录')" id="nav-user-status">👤 登录 / 注册</a>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="hero-banner">
+          <div>
+            <h2>Fenix's BookStore 精选计算机与软工好书</h2>
+            <p>基于 Axure RP 中继器（Repeater）驱动的动态商品列表演示。支持关键词检索、分类筛选、加入购物车及后台实时添加新书同步展示。</p>
+          </div>
+          <button class="btn btn-primary" onclick="switchPage(4, '(4) 购物车')">前往购物车结算 →</button>
+        </div>
+
+        <div class="search-bar">
+          <input type="text" id="search-input" class="input-box" placeholder="输入书名或作者搜索（例如：软件工程、算法、架构）..." oninput="renderBooks()">
+          <select id="category-select" class="input-box" style="width: 200px;" onchange="renderBooks()">
+            <option value="ALL">全部分类</option>
+            <option value="软件工程">软件工程</option>
+            <option value="计算机科学">计算机科学</option>
+            <option value="系统架构">系统架构</option>
+          </select>
+          <button class="btn btn-primary" style="width: 120px;" onclick="renderBooks()">🔍 搜索</button>
+        </div>
+
+        <div class="section-title">
+          <span>🔥 热门图书列表（Repeater 动态渲染区）</span>
+          <span style="font-size:13px; color:#64748b; font-weight:normal;">点击“加入购物车”可触发跨页数据新增</span>
+        </div>
+
+        <div class="book-grid" id="book-grid-container"></div>
+      </div>
+    </div>
+
+    <!-- PAGE 2: 用户登录 -->
+    <div class="page-frame" id="page-2">
+      <div class="app-nav">
+        <div class="app-brand" onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')">📚 Fenix's BookStore</div>
+        <div class="app-links">
+          <a onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')">返回首页</a>
+          <a onclick="switchPage(3, '(3) 用户注册')">前往注册</a>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="auth-card">
+          <h2 style="text-align:center; color:#1e293b; margin-bottom:8px;">欢迎登录 Fenix's BookStore</h2>
+          <p style="text-align:center; color:#64748b; font-size:13px; margin-bottom:24px;">请输入您的账号和密码进行身份验证</p>
+          <div class="form-group">
+            <label>用户名 / 学号 / 邮箱</label>
+            <input type="text" id="login-user" class="input-box" value="fenix_student" placeholder="请输入账号">
+          </div>
+          <div class="form-group">
+            <label>登录密码</label>
+            <input type="password" id="login-pwd" class="input-box" value="123456" placeholder="请输入密码">
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; color:#64748b; margin-bottom:20px;">
+            <label><input type="checkbox" checked> 记住登录状态</label>
+            <a style="color:#0284c7; cursor:pointer;" onclick="showToast('提示：密码重置链接已发送至绑定邮箱')">忘记密码？</a>
+          </div>
+          <button class="btn btn-primary" style="width:100%; padding:10px;" onclick="handleLogin()">立即登录</button>
+          <div style="text-align:center; margin-top:16px; font-size:13px; color:#64748b;">
+            还没有账号？ <a style="color:#0284c7; font-weight:bold; cursor:pointer;" onclick="switchPage(3, '(3) 用户注册')">立即免费注册 →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 3: 用户注册 -->
+    <div class="page-frame" id="page-3">
+      <div class="app-nav">
+        <div class="app-brand" onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')">📚 Fenix's BookStore</div>
+        <div class="app-links">
+          <a onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')">返回首页</a>
+          <a onclick="switchPage(2, '(2) 用户登录')">已有账号登录</a>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="auth-card" style="width:460px; margin: 20px auto;">
+          <h2 style="text-align:center; color:#1e293b; margin-bottom:8px;">新用户注册</h2>
+          <p style="text-align:center; color:#64748b; font-size:13px; margin-bottom:20px;">填写以下信息创建您的 Fenix's BookStore 账户</p>
+          <div class="form-group">
+            <label>设置用户名 *</label>
+            <input type="text" id="reg-user" class="input-box" placeholder="4-16位字母或数字">
+          </div>
+          <div class="form-group">
+            <label>绑定邮箱 *</label>
+            <input type="email" id="reg-email" class="input-box" placeholder="example@university.edu.cn">
+          </div>
+          <div class="form-group">
+            <label>设置密码 *</label>
+            <input type="password" id="reg-pwd" class="input-box" placeholder="不少于6位字符">
+          </div>
+          <div class="form-group">
+            <label>确认密码 *</label>
+            <input type="password" id="reg-pwd2" class="input-box" placeholder="请再次输入密码">
+          </div>
+          <button class="btn btn-success" style="width:100%; padding:10px;" onclick="handleRegister()">提交注册并跳转登录</button>
+          <div style="text-align:center; margin-top:14px; font-size:13px; color:#64748b;">
+            已有账号？ <a style="color:#0284c7; cursor:pointer;" onclick="switchPage(2, '(2) 用户登录')">直接登录</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 4: 购物车 -->
+    <div class="page-frame" id="page-4">
+      <div class="app-nav">
+        <div class="app-brand" onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')">📚 Fenix's BookStore</div>
+        <div class="app-links">
+          <a onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')">继续购物</a>
+          <a class="active-nav">🛒 购物车</a>
+          <a onclick="switchPage(5, '(5) 下单')">填写订单</a>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="section-title">
+          <span>🛒 我的购物车（支持中继器行操作：增减数量与删除）</span>
+          <button class="btn btn-outline" onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')">+ 继续添加图书</button>
+        </div>
+
+        <table class="proto-table">
+          <thead>
+            <tr>
+              <th>图书名称</th>
+              <th>单价</th>
+              <th>购买数量</th>
+              <th>小计金额</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="cart-tbody"></tbody>
+        </table>
+
+        <div class="summary-box">
+          <div>
+            <span style="color:#64748b; font-size:14px;">已选商品总数：<strong id="cart-total-count" style="color:#1e293b;">0</strong> 件</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:20px;">
+            <div>应付商品总额：<span class="total-price" id="cart-total-price">¥0.00</span></div>
+            <button class="btn btn-primary" style="padding:10px 24px; font-size:15px;" onclick="proceedToOrder()">去下单 (下一步) →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 5: 下单 -->
+    <div class="page-frame" id="page-5">
+      <div class="app-nav">
+        <div class="app-brand" onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')">📚 Fenix's BookStore</div>
+        <div class="app-links">
+          <a onclick="switchPage(4, '(4) 购物车')">← 返回购物车</a>
+          <a class="active-nav">📦 确认下单信息</a>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="section-title"><span>📦 填写并核对订单信息</span></div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:24px;">
+          <div style="border:1px solid #e2e8f0; border-radius:6px; padding:16px;">
+            <h4 style="margin-bottom:12px; color:#1e293b;">📍 收货人信息</h4>
+            <div class="form-group">
+              <label>收货人姓名</label>
+              <input type="text" id="order-name" class="input-box" value="张同学">
+            </div>
+            <div class="form-group">
+              <label>联系电话</label>
+              <input type="text" id="order-phone" class="input-box" value="13800138000">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label>收货详细地址</label>
+              <input type="text" id="order-addr" class="input-box" value="计算机与信息学院 软件工程实验室 302">
+            </div>
+          </div>
+
+          <div style="border:1px solid #e2e8f0; border-radius:6px; padding:16px;">
+            <h4 style="margin-bottom:12px; color:#1e293b;">🚚 配送与发票选项</h4>
+            <div class="form-group">
+              <label>配送方式</label>
+              <select class="input-box">
+                <option>顺丰速运 (免运费 - 次日达)</option>
+                <option>普通快递 (免运费 - 3日达)</option>
+                <option>校园自提柜代收</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>发票类型</label>
+              <select class="input-box">
+                <option>电子普通发票 - 个人</option>
+                <option>电子普通发票 - 高校科研报销</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label>订单备注</label>
+              <input type="text" class="input-box" placeholder="选填：包装要求或配送时间说明">
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-box">
+          <button class="btn btn-outline" onclick="switchPage(4, '(4) 购物车')">← 返回修改购物车</button>
+          <div style="display:flex; align-items:center; gap:20px;">
+            <span>订单信息核对无误后，请前往结算页计算优惠</span>
+            <button class="btn btn-primary" style="padding:10px 24px;" onclick="switchPage(6, '(6) 结算')">提交订单并去结算 →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 6: 结算 -->
+    <div class="page-frame" id="page-6">
+      <div class="app-nav">
+        <div class="app-brand" onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')">📚 Fenix's BookStore</div>
+        <div class="app-links">
+          <a onclick="switchPage(5, '(5) 下单')">← 返回下单页</a>
+          <a class="active-nav">🧾 订单费用结算</a>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="section-title"><span>🧾 账单结算与优惠抵扣核对</span></div>
+
+        <div style="border:1px solid #e2e8f0; border-radius:6px; padding:20px; margin-bottom:24px; background:#f8fafc;">
+          <h4 style="margin-bottom:12px; color:#1e293b;">📋 订单收货摘要</h4>
+          <p style="font-size:14px; color:#475569; line-height:1.8;" id="checkout-address-summary">
+            收货人：张同学 (13800138000) <br>
+            收货地址：计算机与信息学院 软件工程实验室 302
+          </p>
+        </div>
+
+        <div style="border:1px solid #e2e8f0; border-radius:6px; padding:20px; margin-bottom:24px;">
+          <h4 style="margin-bottom:16px; color:#1e293b;">🎫 优惠券与折扣选择</h4>
+          <div style="display:flex; gap:16px; align-items:center;">
+            <select id="coupon-select" class="input-box" style="width:320px;" onchange="updateCheckoutTotal()">
+              <option value="0">不使用优惠券</option>
+              <option value="15" selected>🎓 软工实验专属满减券 (-¥15.00)</option>
+              <option value="30">🔥 新用户首单立减券 (-¥30.00)</option>
+            </select>
+            <span style="font-size:13px; color:#16a34a;">已自动为您匹配最优校园购书优惠</span>
+          </div>
+        </div>
+
+        <div class="summary-box">
+          <div style="font-size:14px; color:#475569;">
+            商品总价：<strong id="settle-raw-total">¥0.00</strong> &nbsp;|&nbsp; 运费：<strong>¥0.00</strong> &nbsp;|&nbsp; 优惠抵扣：<strong style="color:#16a34a;" id="settle-discount">-¥15.00</strong>
+          </div>
+          <div style="display:flex; align-items:center; gap:20px;">
+            <div>实付金额：<span class="total-price" id="settle-final-total">¥0.00</span></div>
+            <button class="btn btn-success" style="padding:10px 24px; font-size:15px;" onclick="switchPage(7, '(7) 支付')">确认结算，立即去支付 →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 7: 支付 -->
+    <div class="page-frame" id="page-7">
+      <div class="app-nav">
+        <div class="app-brand" onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')">📚 Fenix's BookStore</div>
+        <div class="app-links">
+          <a onclick="switchPage(6, '(6) 结算')">← 返回结算页</a>
+          <a class="active-nav">💳 在线收银台</a>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="section-title">
+          <span>💳 Fenix's BookStore 安全收银台</span>
+          <span style="font-size:14px; color:#dc2626;">请在 <strong id="countdown-timer">14:59</strong> 内完成支付</span>
+        </div>
+
+        <div style="text-align:center; margin-bottom:20px;">
+          <p style="font-size:14px; color:#64748b;">订单号：<strong>FX202610288891</strong> &nbsp;|&nbsp; 需支付金额：<span class="total-price" id="pay-amount-display">¥128.00</span></p>
+        </div>
+
+        <div class="pay-grid">
+          <div class="pay-method selected" onclick="selectPayMethod(this)">💚 微信扫码支付</div>
+          <div class="pay-method" onclick="selectPayMethod(this)">💙 支付宝扫码支付</div>
+          <div class="pay-method" onclick="selectPayMethod(this)">🏦 校园卡 / 银联快捷支付</div>
+        </div>
+
+        <div class="qr-placeholder">
+          <div style="font-size:36px; margin-bottom:8px;">📱</div>
+          <strong>模拟支付二维码区域</strong>
+          <span style="font-size:12px; color:#64748b; margin-top:4px;">请点击下方按钮完成交互闭环</span>
+        </div>
+
+        <div style="text-align:center; margin-top:16px;">
+          <button class="btn btn-success" style="padding:12px 36px; font-size:16px;" onclick="completePayment()">✅ 模拟完成支付</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 8: 库存（后台管理） -->
+    <div class="page-frame" id="page-8">
+      <div class="app-nav" style="background:#0f172a;">
+        <div class="app-brand" onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')">⚙️ Fenix's BookStore 后台管理</div>
+        <div class="app-links">
+          <a onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')">🌐 返回前台商城</a>
+          <a class="active-nav">📊 (8) 库存管理</a>
+          <a onclick="switchPage(9, '(9) 添加商品')">➕ (9) 添加商品</a>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="section-title">
+          <span>📊 图书库存监控与调整（中继器行内编辑演示）</span>
+          <button class="btn btn-primary" onclick="switchPage(9, '(9) 添加商品')">+ 添加新图书入库</button>
+        </div>
+
+        <table class="proto-table">
+          <thead>
+            <tr>
+              <th>图书编号</th>
+              <th>图书名称</th>
+              <th>分类</th>
+              <th>售价</th>
+              <th>当前库存</th>
+              <th>状态</th>
+              <th>快捷操作</th>
+            </tr>
+          </thead>
+          <tbody id="stock-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PAGE 9: 添加商品（后台管理） -->
+    <div class="page-frame" id="page-9">
+      <div class="app-nav" style="background:#0f172a;">
+        <div class="app-brand" onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')">⚙️ Fenix's BookStore 后台管理</div>
+        <div class="app-links">
+          <a onclick="switchPage(1, '(1) 系统主界面（商品浏览页）')">🌐 返回前台商城</a>
+          <a onclick="switchPage(8, '(8) 库存')">📊 (8) 库存管理</a>
+          <a class="active-nav">➕ (9) 添加商品</a>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="section-title">
+          <span>➕ 添加新图书商品（跨页面数据新增至库存与前台主页）</span>
+          <button class="btn btn-outline" onclick="switchPage(8, '(8) 库存')">← 返回库存列表</button>
+        </div>
+
+        <div style="max-width:600px; margin: 10px auto; width:100%; border:1px solid #e2e8f0; border-radius:8px; padding:24px;">
+          <div class="form-group">
+            <label>图书名称 *</label>
+            <input type="text" id="add-title" class="input-box" placeholder="例如：《设计模式：可复用面向对象软件的基础》">
+          </div>
+          <div class="form-group">
+            <label>作者 / 译者 *</label>
+            <input type="text" id="add-author" class="input-box" placeholder="例如：Erich Gamma 等">
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+            <div class="form-group">
+              <label>所属分类 *</label>
+              <select id="add-category" class="input-box">
+                <option value="软件工程">软件工程</option>
+                <option value="计算机科学">计算机科学</option>
+                <option value="系统架构">系统架构</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>销售单价 (元) *</label>
+              <input type="number" id="add-price" class="input-box" value="79.00" step="1">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>初始入库数量 *</label>
+            <input type="number" id="add-stock" class="input-box" value="50">
+          </div>
+          <div style="display:flex; gap:12px; margin-top:24px;">
+            <button class="btn btn-success" style="flex:1; padding:10px;" onclick="handleAddBook()">✅ 确认发布上架（同步至库存与前台）</button>
+            <button class="btn btn-outline" onclick="switchPage(8, '(8) 库存')">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast">操作提示</div>
+
+<script>
+  // Initial Books Data (Simulating Axure Repeater Dataset)
+  let books = [
+    { id: 'BK1001', title: '《凤凰项目：一个IT运维的传奇故事》', author: 'Gene Kim / Kevin Behr', category: '软件工程', price: 68.00, stock: 45 },
+    { id: 'BK1002', title: '《软件工程：实践者的研究方法》', author: 'Roger S. Pressman', category: '软件工程', price: 99.00, stock: 32 },
+    { id: 'BK1003', title: '《凤凰架构：构建可靠的大型分布式系统》', author: '周志明 著', category: '系统架构', price: 89.00, stock: 60 },
+    { id: 'BK1004', title: '《深入理解计算机系统 (CSAPP)》', author: 'Randal E. Bryant', category: '计算机科学', price: 139.00, stock: 25 },
+    { id: 'BK1005', title: '《算法导论 (原书第3版)》', author: 'Thomas H. Cormen 等', category: '计算机科学', price: 128.00, stock: 18 },
+    { id: 'BK1006', title: '《人月神话：软件项目管理之道》', author: 'Frederick P. Brooks', category: '软件工程', price: 58.00, stock: 8 }
+  ];
+
+  // Initial Cart Data
+  let cart = [
+    { id: 'BK1002', title: '《软件工程：实践者的研究方法》', price: 99.00, qty: 1 },
+    { id: 'BK1003', title: '《凤凰架构：构建可靠的大型分布式系统》', price: 89.00, qty: 1 }
+  ];
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.innerText = msg;
+    t.style.display = 'block';
+    clearTimeout(window.toastTimer);
+    window.toastTimer = setTimeout(() => { t.style.display = 'none'; }, 2600);
+  }
+
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('collapsed');
+  }
+
+  function switchPage(pageNum, titleText) {
+    document.querySelectorAll('.page-frame').forEach(el => el.classList.remove('active'));
+    document.getElementById('page-' + pageNum).classList.add('active');
+
+    const items = document.querySelectorAll('.sitemap-item');
+    items.forEach((item, idx) => {
+      item.classList.toggle('active', idx === (pageNum - 1));
+    });
+
+    document.getElementById('current-page-label').innerText = '当前页面：' + titleText;
+
+    if (pageNum === 1) renderBooks();
+    if (pageNum === 4) renderCart();
+    if (pageNum === 6) updateCheckoutTotal();
+    if (pageNum === 7) updateCheckoutTotal();
+    if (pageNum === 8) renderStock();
+  }
+
+  function renderBooks() {
+    const keyword = document.getElementById('search-input').value.trim().toLowerCase();
+    const cat = document.getElementById('category-select').value;
+    const container = document.getElementById('book-grid-container');
+    container.innerHTML = '';
+
+    const filtered = books.filter(b => {
+      const matchKw = b.title.toLowerCase().includes(keyword) || b.author.toLowerCase().includes(keyword);
+      const matchCat = (cat === 'ALL' || b.category === cat);
+      return matchKw && matchCat;
+    });
+
+    filtered.forEach(b => {
+      const card = document.createElement('div');
+      card.className = 'book-card';
+      card.innerHTML = `
+        <div class="book-cover">
+          📘 ${b.title}
+          <span>分类：${b.category} | 库存：${b.stock}本</span>
+        </div>
+        <div class="book-title">${b.title}</div>
+        <div class="book-author">作者：${b.author}</div>
+        <div class="book-bottom">
+          <span class="book-price">¥${b.price.toFixed(2)}</span>
+          <button class="btn btn-primary" onclick="addToCart('${b.id}')">🛒 加入购物车</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+    updateCartBadge();
+  }
+
+  function updateCartBadge() {
+    const totalCount = cart.reduce((acc, item) => acc + item.qty, 0);
+    document.getElementById('nav-cart-count').innerText = totalCount;
+  }
+
+  function addToCart(bookId) {
+    const book = books.find(b => b.id === bookId);
+    if (!book) return;
+    const existing = cart.find(c => c.id === bookId);
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      cart.push({ id: book.id, title: book.title, price: book.price, qty: 1 });
+    }
+    updateCartBadge();
+    showToast(`已将 ${book.title} 加入购物车！`);
+  }
+
+  function renderCart() {
+    const tbody = document.getElementById('cart-tbody');
+    tbody.innerHTML = '';
+    let totalCount = 0;
+    let totalPrice = 0;
+
+    if (cart.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:32px;">购物车空空如也，快去首页挑选图书吧！</td></tr>`;
+    } else {
+      cart.forEach((item, index) => {
+        const sub = item.price * item.qty;
+        totalCount += item.qty;
+        totalPrice += sub;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${item.title}</strong></td>
+          <td>¥${item.price.toFixed(2)}</td>
+          <td>
+            <div class="qty-control">
+              <button class="qty-btn" onclick="changeCartQty(${index}, -1)">-</button>
+              <span class="qty-val">${item.qty}</span>
+              <button class="qty-btn" onclick="changeCartQty(${index}, 1)">+</button>
+            </div>
+          </td>
+          <td style="color:#dc2626; font-weight:bold;">¥${sub.toFixed(2)}</td>
+          <td><button class="btn btn-danger" style="padding:4px 10px; font-size:12px;" onclick="removeCartItem(${index})">删除</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.getElementById('cart-total-count').innerText = totalCount;
+    document.getElementById('cart-total-price').innerText = '¥' + totalPrice.toFixed(2);
+    updateCartBadge();
+  }
+
+  function changeCartQty(idx, delta) {
+    cart[idx].qty += delta;
+    if (cart[idx].qty <= 0) {
+      cart.splice(idx, 1);
+    }
+    renderCart();
+  }
+
+  function removeCartItem(idx) {
+    const removed = cart.splice(idx, 1);
+    renderCart();
+    showToast(`已从购物车移除：${removed[0].title}`);
+  }
+
+  function proceedToOrder() {
+    if (cart.length === 0) {
+      showToast('购物车为空，请先添加图书！');
+      return;
+    }
+    switchPage(5, '(5) 下单');
+  }
+
+  function updateCheckoutTotal() {
+    const name = document.getElementById('order-name').value;
+    const phone = document.getElementById('order-phone').value;
+    const addr = document.getElementById('order-addr').value;
+    document.getElementById('checkout-address-summary').innerHTML = `收货人：${name} (${phone}) <br>收货地址：${addr}`;
+
+    const rawTotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+    const discount = parseFloat(document.getElementById('coupon-select').value || '0');
+    const finalTotal = Math.max(0, rawTotal - discount);
+
+    document.getElementById('settle-raw-total').innerText = '¥' + rawTotal.toFixed(2);
+    document.getElementById('settle-discount').innerText = '-¥' + discount.toFixed(2);
+    document.getElementById('settle-final-total').innerText = '¥' + finalTotal.toFixed(2);
+    document.getElementById('pay-amount-display').innerText = '¥' + finalTotal.toFixed(2);
+  }
+
+  function selectPayMethod(el) {
+    document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function completePayment() {
+    showToast('🎉 支付成功！订单已生成，正在为您跳转回首页...');
+    cart = [];
+    updateCartBadge();
+    setTimeout(() => {
+      switchPage(1, '(1) 系统主界面（商品浏览页）');
+    }, 1200);
+  }
+
+  function handleLogin() {
+    const user = document.getElementById('login-user').value.trim() || 'fenix_student';
+    document.getElementById('nav-user-status').innerText = '👤 欢迎，' + user;
+    showToast('登录成功！正在跳转至系统主界面...');
+    setTimeout(() => {
+      switchPage(1, '(1) 系统主界面（商品浏览页）');
+    }, 800);
+  }
+
+  function handleRegister() {
+    const u = document.getElementById('reg-user').value.trim();
+    if (!u) {
+      showToast('请填写用户名后再提交注册！');
+      return;
+    }
+    document.getElementById('login-user').value = u;
+    showToast('注册成功！请使用新账号登录。');
+    setTimeout(() => {
+      switchPage(2, '(2) 用户登录');
+    }, 800);
+  }
+
+  function renderStock() {
+    const tbody = document.getElementById('stock-tbody');
+    tbody.innerHTML = '';
+    books.forEach((b, idx) => {
+      const statusBadge = b.stock > 15
+        ? `<span style="color:#16a34a; font-weight:bold;">● 库存充足</span>`
+        : `<span style="color:#ea580c; font-weight:bold;">⚠️ 库存偏低</span>`;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${b.id}</td>
+        <td><strong>${b.title}</strong></td>
+        <td>${b.category}</td>
+        <td>¥${b.price.toFixed(2)}</td>
+        <td><strong style="font-size:15px;">${b.stock}</strong> 本</td>
+        <td>${statusBadge}</td>
+        <td>
+          <button class="btn btn-outline" style="padding:4px 8px; font-size:12px;" onclick="adjustStock(${idx}, 10)">+10 补货</button>
+          <button class="btn btn-outline" style="padding:4px 8px; font-size:12px;" onclick="adjustStock(${idx}, -5)">-5 出库</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function adjustStock(idx, delta) {
+    books[idx].stock = Math.max(0, books[idx].stock + delta);
+    renderStock();
+    showToast(`已更新 ${books[idx].title} 库存为 ${books[idx].stock} 本`);
+  }
+
+  function handleAddBook() {
+    const title = document.getElementById('add-title').value.trim();
+    const author = document.getElementById('add-author').value.trim() || '佚名作者';
+    const category = document.getElementById('add-category').value;
+    const price = parseFloat(document.getElementById('add-price').value) || 59.00;
+    const stock = parseInt(document.getElementById('add-stock').value) || 20;
+
+    if (!title) {
+      showToast('请输入新图书名称！');
+      return;
+    }
+
+    const newId = 'BK100' + (books.length + 1);
+    books.unshift({
+      id: newId,
+      title: title.startsWith('《') ? title : `《${title}》`,
+      author,
+      category,
+      price,
+      stock
+    });
+
+    document.getElementById('add-title').value = '';
+    document.getElementById('add-author').value = '';
+    showToast('🎉 新图书添加成功！已同步至后台库存与前台商品页。');
+    setTimeout(() => {
+      switchPage(8, '(8) 库存');
+    }, 800);
+  }
+
+  // Countdown Timer Simulation on Payment Page
+  let secondsLeft = 899;
+  setInterval(() => {
+    if (secondsLeft > 0) secondsLeft--;
+    const m = String(Math.floor(secondsLeft / 60)).padStart(2, '0');
+    const s = String(secondsLeft % 60).padStart(2, '0');
+    const el = document.getElementById('countdown-timer');
+    if (el) el.innerText = `${m}:${s}`;
+  }, 1000);
+
+  // Initial render
+  renderBooks();
+</script>
+</body>
+</html>
